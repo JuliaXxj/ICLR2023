@@ -1,5 +1,6 @@
 import shutil
-import imageio.v2 as imageio
+# import imageio.v2 as imageio
+import imageio
 import os
 import matplotlib.pyplot as plt
 import numpy as np
