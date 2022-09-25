@@ -226,6 +226,20 @@ class VNN_FFN_RELU_4(BaseNet):
         #    out = F.log_softmax(out, dim=1)
         return out
     
+    def update_all_weights(self, names_in_order, new_weights):
+        self.fc1.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[0]]).float())
+        self.fc2.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[1]]).float())
+        self.fc3.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[2]]).float())
+        self.fc4.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[3]]).float())
+        self.fc5.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[4]]).float())
+        
+    def update_all_bias(self, names_in_order, new_bias):
+        self.fc1.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[0]]).float())
+        self.fc2.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[1]]).float())
+        self.fc3.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[2]]).float())
+        self.fc4.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[3]]).float())
+        self.fc5.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[4]]).float())
+    
 
 class PatternClassifier(BaseNet):
     def __init__(self, input_dim, max_unit, output_dim):
