@@ -218,11 +218,15 @@ class VNN_FFN_RELU_2(BaseNet):
         return out
     
     def update_all_weights(self, names_in_order, new_weights):
+        if len(names_in_order) != 3 or len(new_weights) != 3:
+            raise Exception("Expected the number of layer names or new weights to be 3.")
         self.fc1.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[0]]).float())
         self.fc2.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[1]]).float())
         self.fc3.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[2]]).float())
         
     def update_all_bias(self, names_in_order, new_bias):
+        if len(names_in_order) != 3 or len(new_bias) != 3:
+            raise Exception("Expected the number of layer names or new bias to be 3.")
         self.fc1.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[0]]).float())
         self.fc2.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[1]]).float())
         self.fc3.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[2]]).float())
@@ -268,6 +272,8 @@ class VNN_FFN_RELU_4(BaseNet):
         return out
     
     def update_all_weights(self, names_in_order, new_weights):
+        if len(names_in_order) != 5 or len(new_weights) != 5:
+            raise Exception("Expected the number of layer names or new weights to be 5.")
         self.fc1.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[0]]).float())
         self.fc2.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[1]]).float())
         self.fc3.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[2]]).float())
@@ -275,6 +281,8 @@ class VNN_FFN_RELU_4(BaseNet):
         self.fc5.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[4]]).float())
         
     def update_all_bias(self, names_in_order, new_bias):
+        if len(names_in_order) != 5 or len(new_bias) != 5:
+            raise Exception("Expected the number of layer names or new bias to be 5.")
         self.fc1.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[0]]).float())
         self.fc2.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[1]]).float())
         self.fc3.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[2]]).float())
@@ -331,6 +339,8 @@ class VNN_FFN_RELU_6(BaseNet):
         return out
     
     def update_all_weights(self, names_in_order, new_weights):
+        if len(names_in_order) != 7 or len(new_weights) != 7:
+            raise Exception("Expected the number of layer names or new weights to be 7.")
         self.fc1.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[0]]).float())
         self.fc2.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[1]]).float())
         self.fc3.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[2]]).float())
@@ -340,6 +350,8 @@ class VNN_FFN_RELU_6(BaseNet):
         self.fc7.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[6]]).float())
         
     def update_all_bias(self, names_in_order, new_bias):
+        if len(names_in_order) != 7 or len(new_bias) != 7:
+            raise Exception("Expected the number of layer names or new bias to be 7.")
         self.fc1.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[0]]).float())
         self.fc2.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[1]]).float())
         self.fc3.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[2]]).float())
