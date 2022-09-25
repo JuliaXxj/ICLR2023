@@ -188,7 +188,7 @@ class FeedforwardNeuralNetModel(BaseNet):
 
 class VNN_FFN_RELU_4(BaseNet):
     def __init__(self, input_dim, hidden_dim, output_dim):
-        super(FeedforwardNeuralNetModel, self).__init__()
+        super(VNN_FFN_RELU_4, self).__init__()
 
         # Linear function
         self.fc1 = nn.Linear(input_dim, hidden_dim)
