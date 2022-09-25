@@ -185,6 +185,47 @@ class FeedforwardNeuralNetModel(BaseNet):
     def model_savename(self):
         return "FFN" + datetime.now().strftime("%H-%M-%S")
 
+class VNN_FFN_RELU_2(BaseNet):
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        super(VNN_FFN_RELU_2, self).__init__()
+
+        # Linear function
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim, output_dim)
+
+    def register_log(self, detach=True):
+        self.reset_hooks()
+        # first layer should not make any difference?
+        self.hooks.append(self.fc1.register_forward_hook(get_activation('fc1', self.tensor_log, detach)))
+        self.hooks.append(self.fc2.register_forward_hook(get_activation('fc2', self.tensor_log, detach)))
+        self.hooks.append(
+            self.fc3.register_forward_hook(get_activation('fc3', self.tensor_log, detach, is_lastlayer=True)))
+
+    def register_gradient(self, detach=True):
+        self.reset_bw_hooks()
+        # first layer should not make any difference?
+        self.bw_hooks.append(self.fc1.register_backward_hook(get_gradient('fc1', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc2.register_backward_hook(get_gradient('fc2', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc3.register_backward_hook(get_gradient('fc3', self.gradient_log, detach)))
+
+
+    def forward(self, x):
+        out = F.relu(self.fc1(x.view(-1, 28 * 28)))
+        out = F.relu(self.fc2(out))
+        out = self.fc3(out)
+        #    out = F.log_softmax(out, dim=1)
+        return out
+    
+    def update_all_weights(self, names_in_order, new_weights):
+        self.fc1.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[0]]).float())
+        self.fc2.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[1]]).float())
+        self.fc3.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[2]]).float())
+        
+    def update_all_bias(self, names_in_order, new_bias):
+        self.fc1.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[0]]).float())
+        self.fc2.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[1]]).float())
+        self.fc3.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[2]]).float())
 
 class VNN_FFN_RELU_4(BaseNet):
     def __init__(self, input_dim, hidden_dim, output_dim):
@@ -214,7 +255,7 @@ class VNN_FFN_RELU_4(BaseNet):
         self.bw_hooks.append(self.fc2.register_backward_hook(get_gradient('fc2', self.gradient_log, detach)))
         self.bw_hooks.append(self.fc3.register_backward_hook(get_gradient('fc3', self.gradient_log, detach)))
         self.bw_hooks.append(self.fc4.register_backward_hook(get_gradient('fc4', self.gradient_log, detach)))
-        self.bw_hooks.append(self.fc4.register_backward_hook(get_gradient('fc5', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc5.register_backward_hook(get_gradient('fc5', self.gradient_log, detach)))
 
 
     def forward(self, x):
@@ -239,6 +280,73 @@ class VNN_FFN_RELU_4(BaseNet):
         self.fc3.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[2]]).float())
         self.fc4.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[3]]).float())
         self.fc5.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[4]]).float())
+ 
+
+class VNN_FFN_RELU_6(BaseNet):
+    def __init__(self, input_dim, hidden_dim, output_dim):
+        super(VNN_FFN_RELU_6, self).__init__()
+
+        # Linear function
+        self.fc1 = nn.Linear(input_dim, hidden_dim)
+        self.fc2 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc3 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc4 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc5 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc6 = nn.Linear(hidden_dim, hidden_dim)
+        self.fc7 = nn.Linear(hidden_dim, output_dim)
+
+    def register_log(self, detach=True):
+        self.reset_hooks()
+        # first layer should not make any difference?
+        self.hooks.append(self.fc1.register_forward_hook(get_activation('fc1', self.tensor_log, detach)))
+        self.hooks.append(self.fc2.register_forward_hook(get_activation('fc2', self.tensor_log, detach)))
+        self.hooks.append(self.fc3.register_forward_hook(get_activation('fc3', self.tensor_log, detach)))
+        self.hooks.append(self.fc4.register_forward_hook(get_activation('fc4', self.tensor_log, detach)))
+        self.hooks.append(self.fc5.register_forward_hook(get_activation('fc5', self.tensor_log, detach)))
+        self.hooks.append(self.fc6.register_forward_hook(get_activation('fc6', self.tensor_log, detach)))
+        self.hooks.append(
+            self.fc7.register_forward_hook(get_activation('fc7', self.tensor_log, detach, is_lastlayer=True)))
+
+    def register_gradient(self, detach=True):
+        self.reset_bw_hooks()
+        # first layer should not make any difference?
+        self.bw_hooks.append(self.fc1.register_backward_hook(get_gradient('fc1', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc2.register_backward_hook(get_gradient('fc2', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc3.register_backward_hook(get_gradient('fc3', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc4.register_backward_hook(get_gradient('fc4', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc5.register_backward_hook(get_gradient('fc5', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc6.register_backward_hook(get_gradient('fc6', self.gradient_log, detach)))
+        self.bw_hooks.append(self.fc7.register_backward_hook(get_gradient('fc7', self.gradient_log, detach)))
+
+
+    def forward(self, x):
+        out = F.relu(self.fc1(x.view(-1, 28 * 28)))
+        out = F.relu(self.fc2(out))
+        out = F.relu(self.fc3(out))
+        out = F.relu(self.fc4(out))
+        out = F.relu(self.fc5(out))
+        out = F.relu(self.fc6(out))                  
+        out = self.fc7(out)
+        #    out = F.log_softmax(out, dim=1)
+        return out
+    
+    def update_all_weights(self, names_in_order, new_weights):
+        self.fc1.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[0]]).float())
+        self.fc2.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[1]]).float())
+        self.fc3.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[2]]).float())
+        self.fc4.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[3]]).float())
+        self.fc5.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[4]]).float())
+        self.fc6.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[5]]).float())
+        self.fc7.weight = torch.nn.Parameter(torch.from_numpy( new_weights[names_in_order[6]]).float())
+        
+    def update_all_bias(self, names_in_order, new_bias):
+        self.fc1.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[0]]).float())
+        self.fc2.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[1]]).float())
+        self.fc3.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[2]]).float())
+        self.fc4.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[3]]).float())
+        self.fc5.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[4]]).float())
+        self.fc6.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[5]]).float())
+        self.fc7.bias = torch.nn.Parameter(torch.from_numpy( new_bias[names_in_order[6]]).float())
     
 
 class PatternClassifier(BaseNet):
